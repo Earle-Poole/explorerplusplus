@@ -123,6 +123,8 @@ void Explorerplusplus::OnCreate(void)
 	LoadAllSettings(&pLoadSave);
 	ApplyToolbarSettings();
 
+	SetLanguageModule();
+
 	m_navigation = new Navigation(m_config, this);
 
 	m_mainWindow = MainWindow::Create(m_hContainer, m_config, m_hLanguageModule, this, m_navigation);
@@ -167,15 +169,6 @@ void Explorerplusplus::OnCreate(void)
 	/* Settings cannot be applied until
 	all child windows have been created. */
 	ApplyLoadedSettings();
-
-	/* Taskbar thumbnails can only be shown in
-	Windows 7, so we'll set the internal setting to
-	false if we're running on an earlier version
-	of Windows. */
-	if(!IsWindows7OrGreater())
-	{
-		m_config->showTaskbarThumbnails = FALSE;
-	}
 
 	m_taskbarThumbnails = TaskbarThumbnails::Create(this, m_tabContainer, m_navigation, m_hLanguageModule, m_config);
 

@@ -168,6 +168,8 @@ private:
 
 	/* Main window private message handlers. */
 	LRESULT CALLBACK		CommandHandler(HWND hwnd, WPARAM wParam);
+	LRESULT					HandleMenuOrAccelerator(HWND hwnd, WPARAM wParam);
+	LRESULT					HandleControlNotification(HWND hwnd, WPARAM wParam);
 	LRESULT CALLBACK		NotifyHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	BOOL					OnSize(int MainWindowWidth,int MainWindowHeight);
 	int						OnClose(void);
@@ -183,7 +185,6 @@ private:
 	void					HandleDirectoryMonitoring(int iTabId);
 	void					OnDisplayWindowResized(WPARAM wParam);
 	void					OnStartedBrowsing(int iTabId, const TCHAR *szPath);
-	void					UpdateTabToolbar();
 	void					OnAutoSizeColumns(void);
 	void					OnToolbarViews(void);
 	void					OnSortByAscending(BOOL bSortAscending);
@@ -280,6 +281,12 @@ private:
 	LRESULT CALLBACK		TreeViewHolderWindowNotifyHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	void					OnTreeViewHolderWindowTimer(void);
 
+	/* Tab backing. */
+	void					CreateTabBacking();
+	void					OnTabsInitialized();
+	void					OnTabUpdated(const Tab &tab, Tab::PropertyType propertyType);
+	void					UpdateTabToolbar();
+
 	/* Tabs. */
 	void					InitializeTabs();
 	boost::signals2::connection	AddTabsInitializedObserver(const TabsInitializedSignal::slot_type &observer);
@@ -289,7 +296,6 @@ private:
 	bool					OnCloseTab();
 	HRESULT					RestoreTabs(ILoadSave *pLoadSave);
 	HRESULT					RefreshTab(const Tab &tab);
-	void					OnTabUpdated(const Tab &tab, Tab::PropertyType propertyType);
 
 	void					OnNavigationCompleted(const Tab &tab);
 
@@ -299,6 +305,7 @@ private:
 	Navigation				*GetNavigation();
 	Plugins::PluginMenuManager	*GetPluginMenuManager();
 	UiTheming				*GetUiTheming();
+	AcceleratorUpdater		*GetAccleratorUpdater();
 	Plugins::PluginCommandManager	*GetPluginCommandManager();
 
 	/* Plugins. */
@@ -322,7 +329,6 @@ private:
 	void					CreateDrivesToolbar(void);
 	void					CreateApplicationToolbar();
 	HWND					CreateTabToolbar(HWND hParent,int idCommand,TCHAR *szTip);
-	void					CreateTabBacking();
 
 	/* Main toolbars. */
 	void					InitializeMainToolbars(void);
@@ -562,6 +568,7 @@ private:
 	/* Plugins. */
 	std::unique_ptr<Plugins::PluginManager>	m_pluginManager;
 	Plugins::PluginMenuManager	m_pluginMenuManager;
+	AcceleratorUpdater		m_acceleratorUpdater;
 	Plugins::PluginCommandManager	m_pluginCommandManager;
 
 	HWND					m_hActiveListView;

@@ -908,13 +908,6 @@ INT_PTR CALLBACK Explorerplusplus::TabSettingsProc(HWND hDlg,UINT uMsg,WPARAM wP
 	{
 		case WM_INITDIALOG:
 			{
-				if(!IsWindows7OrGreater())
-				{
-					EnableWindow(GetDlgItem(hDlg,IDC_TABS_TASKBARTHUMBNAILS),FALSE);
-
-					m_config->showTaskbarThumbnails = FALSE;
-				}
-
 				if(m_config->showTaskbarThumbnails)
 					CheckDlgButton(hDlg,IDC_TABS_TASKBARTHUMBNAILS,BST_CHECKED);
 				if(m_config->forceSameTabWidth.get())
@@ -1249,7 +1242,7 @@ void Explorerplusplus::AddLanguages(HWND hDlg)
 	GetProcessImageName(GetCurrentProcessId(),szImageDirectory,SIZEOF_ARRAY(szImageDirectory));
 	PathRemoveFileSpec(szImageDirectory);
 	StringCchCopy(szNamePattern,SIZEOF_ARRAY(szNamePattern),szImageDirectory);
-	PathAppend(szNamePattern,_T("Explorer++??.dll"));
+	PathAppend(szNamePattern, NExplorerplusplus::LANGUAGE_DLL_FILENAME_PATTERN);
 
 	hFindFile = FindFirstFile(szNamePattern,&wfd);
 
